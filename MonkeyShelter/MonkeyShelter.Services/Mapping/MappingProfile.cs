@@ -13,12 +13,26 @@ namespace MonkeyShelter.Services.Mapping
     {
         public MappingProfile()
         {
+            //Mapping for Monkey
             CreateMap<Monkey, MonkeyDto>()
                 .ForMember(dest => dest.Species, opt => opt.MapFrom(src => src.Species!.Name))
                 .ForMember(dest => dest.Shelter, opt => opt.MapFrom(src => src.Shelter!.Name));
 
             CreateMap<CreateMonkeyDto, Monkey>()
                 .ForMember(dest => dest.ArrivalDate, opt => opt.MapFrom(_ => DateTime.UtcNow));
+
+            //Mapping for Species
+            CreateMap<Species, SpeciesDto>().ReverseMap();
+            CreateMap<CreateSpeciesDto, Species>();
+
+            //Mapping for Shelter
+            CreateMap<Shelter, ShelterDto>().ReverseMap();
+            CreateMap<CreateShelterDto, Shelter>();
+            
+            //Mapping for VetCheck
+            CreateMap<VetCheck, VetCheckDto>();
+            CreateMap<CreateVetCheckDto, VetCheck>();
+
         }
     }
 }

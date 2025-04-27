@@ -32,8 +32,12 @@ namespace MonkeyShelter.API
             builder.Services.AddDbContext<MonkeyShelterDbContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Register IMonkeyRepository and its implementation
+            // Register IRepositories and their implementations
             builder.Services.AddScoped<IMonkeyRepository, MonkeyRepository>();
+            builder.Services.AddScoped<ISpeciesRepository, SpeciesRepository>();
+            builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
+            builder.Services.AddScoped<IVetCheckRepository, VetCheckRepository>();
+
 
             //Adding Automapper
             builder.Services.AddAutoMapper(typeof(MappingProfile));
