@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using MonkeyShelter.Core.Interfaces;
 using MonkeyShelter.Infrastructure;
+using MonkeyShelter.Infrastructure.Repositories;
 
 namespace MonkeyShelter.API
 {
@@ -11,13 +13,19 @@ namespace MonkeyShelter.API
 
             // Add services to the container.
 
+            
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            //Add dbcontext
             builder.Services.AddDbContext<MonkeyShelterDbContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // Register IMonkeyRepository and its implementation
+            builder.Services.AddScoped<IMonkeyRepository, MonkeyRepository>();
 
             var app = builder.Build();
 
