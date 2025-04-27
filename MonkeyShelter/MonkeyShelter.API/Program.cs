@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using MonkeyShelter.Infrastructure;
+
 namespace MonkeyShelter.API
 {
     public class Program
@@ -12,6 +15,9 @@ namespace MonkeyShelter.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddDbContext<MonkeyShelterDbContext>(options =>
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 
