@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Models;
 using MonkeyShelter.Core.Interfaces;
 using MonkeyShelter.Infrastructure;
 using MonkeyShelter.Infrastructure.Repositories;
+using MonkeyShelter.Services.BackgroundJobs;
 using MonkeyShelter.Services.Mapping;
 
 namespace MonkeyShelter.API
@@ -37,6 +38,8 @@ namespace MonkeyShelter.API
             builder.Services.AddScoped<ISpeciesRepository, SpeciesRepository>();
             builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
             builder.Services.AddScoped<IVetCheckRepository, VetCheckRepository>();
+
+            builder.Services.AddHostedService<VetCheckReminderService>();
 
 
             //Adding Automapper
