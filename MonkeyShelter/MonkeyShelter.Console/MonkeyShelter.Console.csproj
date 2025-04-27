@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MonkeyShelter.Core\MonkeyShelter.Core.csproj" />
+    <ProjectReference Include="..\MonkeyShelter.Services\MonkeyShelter.Services.csproj" />
+  </ItemGroup>
+
 </Project>

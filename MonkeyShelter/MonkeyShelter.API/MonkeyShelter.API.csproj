@@ -14,4 +14,10 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MonkeyShelter.Core\MonkeyShelter.Core.csproj" />
+    <ProjectReference Include="..\MonkeyShelter.Infrastructure\MonkeyShelter.Infrastructure.csproj" />
+    <ProjectReference Include="..\MonkeyShelter.Services\MonkeyShelter.Services.csproj" />
+  </ItemGroup>
+
 </Project>
