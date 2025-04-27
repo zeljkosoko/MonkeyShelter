@@ -5,6 +5,9 @@ using MonkeyShelter.Infrastructure;
 using MonkeyShelter.Infrastructure.Repositories;
 using MonkeyShelter.Services.BackgroundJobs;
 using MonkeyShelter.Services.Mapping;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
+using StackExchange.Redis;
 
 namespace MonkeyShelter.API
 {
@@ -40,6 +43,15 @@ namespace MonkeyShelter.API
             builder.Services.AddScoped<IVetCheckRepository, VetCheckRepository>();
 
             builder.Services.AddHostedService<VetCheckReminderService>();
+
+            // Add Redis cache
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = "localhost:6379"; // Redis server set
+                options.InstanceName = "MonkeyShelter_"; // instance name
+            });
+            //Redis can be started in Docker container:
+            //docker run --name redis -p 6379:6379 -d redis
 
 
             //Adding Automapper

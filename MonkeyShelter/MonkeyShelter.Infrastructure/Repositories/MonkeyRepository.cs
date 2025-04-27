@@ -77,5 +77,36 @@ namespace MonkeyShelter.Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        //logic that will check how many monkeys can arrive or leave the shelter.
+        //Entry restriction code:
+        public async Task<bool> CanMonkeyArriveAsync(DateTime date)
+        {
+            var arrivalsToday = await _context.Monkeys
+                .Where(m => m.ArrivalDate.Date == date.Date)
+                .CountAsync();
+
+            return arrivalsToday < 7;
+        }
+
+        //Departure restriction code:
+        public async Task<bool> CanMonkeyLeaveAsync(DateTime date, int speciesId)
+        {
+            var arrivalsToday = await _context.Monkeys
+                .Where(m => m.ArrivalDate.Date == date.Date)
+                .CountAsync();
+
+            var departuresToday = await _context.Monkeys
+                .Where(m => m.DepartureDate.HasValue && m.DepartureDate.Value.Date == date.Date && m.SpeciesId == speciesId)
+                .CountAsync();
+
+            return arrivalsToday - departuresToday <= 2;
+        }
+
+        public async Task UpdateAsync(Monkey monkey)
+        {
+            _context.Monkeys.Update(monkey);  // Ажурирамо мајмуна у контексту
+            await _context.SaveChangesAsync(); // Спашавамо промене у бази
+        }
     }
 }

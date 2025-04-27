@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MonkeyShelter.Core.DTOs;
 using MonkeyShelter.Core.Entities;
 using MonkeyShelter.Core.Interfaces;
+using MonkeyShelter.Services.Reports;
 
 namespace MonkeyShelter.API.Controllers
 {
@@ -14,10 +15,13 @@ namespace MonkeyShelter.API.Controllers
         private readonly IMonkeyRepository _monkeyRepository;
         private readonly IMapper _mapper;
 
-        public MonkeysController(IMonkeyRepository monkeyRepository, IMapper mapper)
+        private readonly IReportService _reportService;
+
+        public MonkeysController(IMonkeyRepository monkeyRepository, IMapper mapper, IReportService reportService)
         {
             _monkeyRepository = monkeyRepository;
             _mapper = mapper;
+            _reportService = reportService;
         }
 
         [HttpGet]
@@ -56,6 +60,50 @@ namespace MonkeyShelter.API.Controllers
         public async Task<IActionResult> DeleteMonkey(Guid id)
         {
             await _monkeyRepository.RemoveAsync(id);
+            return NoContent();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<MonkeyDto>> AddMonkey([FromBody] CreateMonkeyDto dto)
+        {
+            var canArrive = await _monkeyRepository.CanMonkeyArriveAsync(DateTime.UtcNow);
+
+            if (!canArrive)
+            {
+                return BadRequest("Достигнут је максимални број долазака за данас.");
+            }
+
+            var monkey = _mapper.Map<Monkey>(dto);
+            monkey.ArrivalDate = DateTime.UtcNow;
+
+            await _monkeyRepository.AddAsync(monkey);
+            _reportService.InvalidateSpeciesCountCache();
+
+            return Ok(_mapper.Map<MonkeyDto>(monkey));
+        }
+
+        [HttpDelete("{id}")] //leaving monkey
+        public async Task<IActionResult> RemoveMonkey(Guid id)
+        {
+            var monkey = await _monkeyRepository.GetByIdAsync(id);
+
+            if (monkey == null)
+            {
+                return NotFound();
+            }
+
+            var canLeave = await _monkeyRepository.CanMonkeyLeaveAsync(DateTime.UtcNow, monkey.SpeciesId);
+
+            if (!canLeave)
+            {
+                return BadRequest("Не можете да уклоните мајмуна због ограничења одлазака.");
+            }
+
+            monkey.DepartureDate = DateTime.UtcNow;
+
+            await _monkeyRepository.UpdateAsync(monkey);
+            _reportService.InvalidateSpeciesCountCache();
+
             return NoContent();
         }
     }

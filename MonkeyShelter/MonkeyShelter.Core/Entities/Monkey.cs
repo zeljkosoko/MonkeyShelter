@@ -12,7 +12,7 @@ namespace MonkeyShelter.Core.Entities
         public string Name { get; set; } = string.Empty;
         public double Weight { get; set; }
         public DateTime ArrivalDate { get; set; } = DateTime.UtcNow;
-
+        public DateTime? DepartureDate { get; set; }  // Nullable-he must not go out
         // Foreign Keys
         public int SpeciesId { get; set; }
         public Species Species { get; set; }

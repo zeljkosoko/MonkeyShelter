@@ -16,5 +16,9 @@ namespace MonkeyShelter.Core.Interfaces
         Task AddAsync(Monkey monkey);
         Task RemoveAsync(Guid id);
         Task UpdateWeightAsync(Guid id, double newWeight);
+
+        Task<bool> CanMonkeyArriveAsync(DateTime date);
+        Task<bool> CanMonkeyLeaveAsync(DateTime date, int speciesId);
+        Task UpdateAsync(Monkey monkey);
     }
 }
