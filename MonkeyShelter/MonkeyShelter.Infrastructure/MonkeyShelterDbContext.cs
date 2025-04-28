@@ -5,10 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace MonkeyShelter.Infrastructure
 {
-    public class MonkeyShelterDbContext: DbContext
+    public class MonkeyShelterDbContext: IdentityDbContext<IdentityUser, IdentityRole, string>
     {
         public MonkeyShelterDbContext(DbContextOptions<MonkeyShelterDbContext> options)
         : base(options) { }

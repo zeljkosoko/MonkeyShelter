@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MonkeyShelter.Core.DTOs;
@@ -10,14 +11,17 @@ namespace MonkeyShelter.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Manager")] //Manager is authorized to use the all endpoints
     public class MonkeysController : ControllerBase
     {
         private readonly IMonkeyRepository _monkeyRepository;
         private readonly IMapper _mapper;
-
         private readonly IReportService _reportService;
 
-        public MonkeysController(IMonkeyRepository monkeyRepository, IMapper mapper, IReportService reportService)
+        public MonkeysController(
+            IMonkeyRepository monkeyRepository, 
+            IMapper mapper, 
+            IReportService reportService)
         {
             _monkeyRepository = monkeyRepository;
             _mapper = mapper;
@@ -28,6 +32,7 @@ namespace MonkeyShelter.API.Controllers
         public async Task<ActionResult<IEnumerable<MonkeyDto>>> GetMonkeys()
         {
             var monkeys = await _monkeyRepository.GetAllAsync();
+
             return Ok(_mapper.Map<IEnumerable<MonkeyDto>>(monkeys));
         }
 
@@ -63,7 +68,7 @@ namespace MonkeyShelter.API.Controllers
             return NoContent();
         }
 
-        [HttpPost]
+        [HttpPost("arrive")]
         public async Task<ActionResult<MonkeyDto>> AddMonkey([FromBody] CreateMonkeyDto dto)
         {
             var canArrive = await _monkeyRepository.CanMonkeyArriveAsync(DateTime.UtcNow);
@@ -82,7 +87,7 @@ namespace MonkeyShelter.API.Controllers
             return Ok(_mapper.Map<MonkeyDto>(monkey));
         }
 
-        [HttpDelete("{id}")] //leaving monkey
+        [HttpDelete("{id}/leave")] //leaving monkey
         public async Task<IActionResult> RemoveMonkey(Guid id)
         {
             var monkey = await _monkeyRepository.GetByIdAsync(id);

@@ -72,10 +72,9 @@ namespace MonkeyShelter.Services.Reports
                 .ToListAsync();
         }
 
+        //Information:
         //SetStringAsync =set data in cache
-
         //GetStringAsync-get data from cache
-
         //Remove-delete cache
     }
 }

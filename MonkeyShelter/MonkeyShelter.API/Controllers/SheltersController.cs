@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MonkeyShelter.Core.DTOs;
@@ -9,12 +10,15 @@ namespace MonkeyShelter.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Manager")]
     public class SheltersController : ControllerBase
     {
         private readonly IShelterRepository _repo;
         private readonly IMapper _mapper;
 
-        public SheltersController(IShelterRepository repo, IMapper mapper)
+        public SheltersController(
+            IShelterRepository repo, 
+            IMapper mapper)
         {
             _repo = repo;
             _mapper = mapper;
@@ -32,6 +36,7 @@ namespace MonkeyShelter.API.Controllers
         {
             var shelter = _mapper.Map<Shelter>(dto);
             await _repo.AddAsync(shelter);
+
             return CreatedAtAction(nameof(GetAll), null, _mapper.Map<ShelterDto>(shelter));
         }
     }

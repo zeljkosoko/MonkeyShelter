@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MonkeyShelter.Core.DTOs.Reports;
 using MonkeyShelter.Core.Interfaces;
@@ -7,6 +8,7 @@ namespace MonkeyShelter.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Manager")]
     public class ReportsController : ControllerBase
     {
         private readonly IReportService _reportService;

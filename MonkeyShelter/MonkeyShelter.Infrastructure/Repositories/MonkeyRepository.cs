@@ -105,8 +105,8 @@ namespace MonkeyShelter.Infrastructure.Repositories
 
         public async Task UpdateAsync(Monkey monkey)
         {
-            _context.Monkeys.Update(monkey);  // Ажурирамо мајмуна у контексту
-            await _context.SaveChangesAsync(); // Спашавамо промене у бази
+            _context.Monkeys.Update(monkey);  
+            await _context.SaveChangesAsync(); 
         }
     }
 }

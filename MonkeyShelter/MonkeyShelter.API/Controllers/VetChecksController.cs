@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MonkeyShelter.Core.DTOs;
@@ -9,12 +10,15 @@ namespace MonkeyShelter.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Manager")]
     public class VetChecksController : ControllerBase
     {
         private readonly IVetCheckRepository _repo;
         private readonly IMapper _mapper;
 
-        public VetChecksController(IVetCheckRepository repo, IMapper mapper)
+        public VetChecksController(
+            IVetCheckRepository repo, 
+            IMapper mapper)
         {
             _repo = repo;
             _mapper = mapper;
@@ -32,6 +36,7 @@ namespace MonkeyShelter.API.Controllers
         {
             var check = _mapper.Map<VetCheck>(dto);
             await _repo.AddAsync(check);
+
             return Ok(_mapper.Map<VetCheckDto>(check));
         }
 
