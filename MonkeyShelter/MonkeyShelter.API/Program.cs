@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System;
+using MonkeyShelter.Services.Reports;
 
 namespace MonkeyShelter.API
 {
@@ -69,6 +70,7 @@ namespace MonkeyShelter.API
             builder.Services.AddScoped<IVetCheckRepository, VetCheckRepository>();
 
             builder.Services.AddHostedService<VetCheckReminderService>();
+            builder.Services.AddScoped<IReportService, ReportService>();
 
             // Add Redis cache
             builder.Services.AddStackExchangeRedisCache(options =>
