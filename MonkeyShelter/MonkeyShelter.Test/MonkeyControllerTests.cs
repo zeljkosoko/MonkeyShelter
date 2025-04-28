@@ -20,25 +20,25 @@ namespace MonkeyShelter.Test
 
         public MonkeyControllerTests(WebApplicationFactory<Program> factory)
         {
-            // Прилагођавамо фабрику тако да користи In-Memory базу
+            //We are customizing the factory to use an In-Memory database.
             _client = factory.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureServices(services =>
                 {
-                    // Укљонити постојећи DbContext
+                    // Remove existing DbContext
                     var descriptor = services.SingleOrDefault(
                         d => d.ServiceType == typeof(DbContextOptions<MonkeyShelterDbContext>));
 
                     if (descriptor != null)
                         services.Remove(descriptor);
 
-                    // Додати нови DbContext са In-Memory базом
+                    // Add a new DbContext with an In-Memory database
                     services.AddDbContext<MonkeyShelterDbContext>(options =>
                     {
                         options.UseInMemoryDatabase("TestDb");
                     });
 
-                    // Напунити тест подацима
+                    // Populate the test with data
                     var sp = services.BuildServiceProvider();
                     using var scope = sp.CreateScope();
                     var context = scope.ServiceProvider.GetRequiredService<MonkeyShelterDbContext>();

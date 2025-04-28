@@ -24,19 +24,19 @@ namespace MonkeyShelter.Test
             {
                 builder.ConfigureServices(services =>
                 {
-                    // Уклони постојећи DbContext
+                    // Remove existing DbContext
                     var descriptor = services.SingleOrDefault(
                         d => d.ServiceType == typeof(DbContextOptions<MonkeyShelterDbContext>));
                     if (descriptor != null)
                         services.Remove(descriptor);
 
-                    // Креирај in-memory базу
+                    // Cache in-memory db
                     services.AddDbContext<MonkeyShelterDbContext>(options =>
                     {
                         options.UseInMemoryDatabase("IntegrationTestDb");
                     });
 
-                    // Напуни базу обавезним подацима
+                    // Fill db with required data
                     var sp = services.BuildServiceProvider();
                     using var scope = sp.CreateScope();
                     var db = scope.ServiceProvider.GetRequiredService<MonkeyShelterDbContext>();

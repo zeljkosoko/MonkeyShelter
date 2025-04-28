@@ -46,7 +46,7 @@ namespace MonkeyShelter.Services.Reports
                 .ToListAsync();
 
             var cacheEntryOptions = new DistributedCacheEntryOptions()
-                .SetAbsoluteExpiration(TimeSpan.FromHours(1));  // Кеширамо на 1 сат
+                .SetAbsoluteExpiration(TimeSpan.FromHours(1));  // We cache for an 1hour
 
             await _cache.SetStringAsync(SpeciesCountCacheKey, JsonConvert.SerializeObject(result), cacheEntryOptions);
 

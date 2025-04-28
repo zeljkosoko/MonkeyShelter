@@ -75,7 +75,7 @@ namespace MonkeyShelter.API.Controllers
 
             if (!canArrive)
             {
-                return BadRequest("Достигнут је максимални број долазака за данас.");
+                return BadRequest("The maximum number of arrivals for today has been reached.");
             }
 
             var monkey = _mapper.Map<Monkey>(dto);
@@ -101,7 +101,7 @@ namespace MonkeyShelter.API.Controllers
 
             if (!canLeave)
             {
-                return BadRequest("Не можете да уклоните мајмуна због ограничења одлазака.");
+                return BadRequest("You cannot remove the monkey due to departure restrictions.");
             }
 
             monkey.DepartureDate = DateTime.UtcNow;

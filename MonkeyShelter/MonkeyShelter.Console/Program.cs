@@ -13,11 +13,11 @@ namespace MonkeyShelter.Console
             var token = await LoginAndGetTokenAsync();
             if (string.IsNullOrEmpty(token))
             {
-                System.Console.WriteLine("Autentifikacija nije uspela.");
+                System.Console.WriteLine("Autentification failed.");
                 return;
             }
 
-            System.Console.WriteLine("Uspesan login. Dobijen token:");
+            System.Console.WriteLine("Ok login. Taken token:");
             System.Console.WriteLine(token.Substring(0, 50) + "...");
 
             await GetMonkeysAsync(token);
@@ -32,7 +32,7 @@ namespace MonkeyShelter.Console
             var loginRequest = new LoginRequest
             {
                 Username = "manager1",
-                Password = "Pass123!" // koristi stvarne kredencijale
+                Password = "Pass123!" 
             };
 
             var response = await client.PostAsJsonAsync(loginUrl, loginRequest);
@@ -55,7 +55,7 @@ namespace MonkeyShelter.Console
             var response = await client.GetAsync("https://localhost:5001/api/monkey");
             if (!response.IsSuccessStatusCode)
             {
-                System.Console.WriteLine("Greška pri pozivanju API-ja: " + response.StatusCode);
+                System.Console.WriteLine("API call ERROR: " + response.StatusCode);
                 return;
             }
 

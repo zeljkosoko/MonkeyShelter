@@ -41,7 +41,7 @@ namespace MonkeyShelter.Services.BackgroundJobs
                     }
                 }
 
-                // Wait 24h..
+                // Wait for 24h..
                 await Task.Delay(TimeSpan.FromHours(24), stoppingToken);
             }
         }
