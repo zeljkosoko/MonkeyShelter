@@ -30,6 +30,13 @@ namespace MonkeyShelter.Infrastructure
                 new Species { Id = 2, Name = "Baboon" },
                 new Species { Id = 3, Name = "Capuchin" }
             );
+
+            //Seed examples shelters
+            modelBuilder.Entity<Shelter>().HasData(
+                new Shelter { Id = 1, Name = "Obrenovac" },
+                new Shelter { Id = 2, Name = "Batajnica" },
+                new Shelter { Id = 3, Name = "Kovilovo"}
+                );
         }
     }
 }
