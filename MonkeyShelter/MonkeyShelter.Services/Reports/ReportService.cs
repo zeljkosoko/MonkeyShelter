@@ -40,7 +40,7 @@ namespace MonkeyShelter.Services.Reports
                 .GroupBy(m => m.Species!.Name)
                 .Select(g => new SpeciesCountDto
                 {
-                    Species = g.Key,
+                    Species = g.Key, //key => GroupBy column(Name)
                     Count = g.Count()
                 })
                 .ToListAsync();

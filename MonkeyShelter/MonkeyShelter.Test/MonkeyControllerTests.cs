@@ -11,70 +11,28 @@ using Microsoft.Extensions.DependencyInjection;
 using MonkeyShelter.Infrastructure;
 using Xunit;
 using MonkeyShelter.Core.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MonkeyShelter.Test
 {
-    public class MonkeyControllerTests : IClassFixture<WebApplicationFactory<Program>>
+    public class MonkeyControllerTests : IClassFixture<CustomWebApplicationFactory>
     {
         private readonly HttpClient _client;
 
-        public MonkeyControllerTests(WebApplicationFactory<Program> factory)
+        public MonkeyControllerTests(CustomWebApplicationFactory factory)
         {
-            //We are customizing the factory to use an In-Memory database.
-            _client = factory.WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureServices(services =>
-                {
-                    // Remove existing DbContext
-                    var descriptor = services.SingleOrDefault(
-                        d => d.ServiceType == typeof(DbContextOptions<MonkeyShelterDbContext>));
-
-                    if (descriptor != null)
-                        services.Remove(descriptor);
-
-                    // Add a new DbContext with an In-Memory database
-                    services.AddDbContext<MonkeyShelterDbContext>(options =>
-                    {
-                        options.UseInMemoryDatabase("TestDb");
-                    });
-
-                    // Populate the test with data
-                    var sp = services.BuildServiceProvider();
-                    using var scope = sp.CreateScope();
-                    var context = scope.ServiceProvider.GetRequiredService<MonkeyShelterDbContext>();
-
-                    var species = new Species { Name = "Capuchin" };
-                    var shelter = new Shelter { Name = "Main Shelter" };
-                    context.Species.Add(species);
-                    context.Shelters.Add(shelter);
-                    context.SaveChanges();
-
-                    context.Monkeys.Add(new Monkey
-                    {
-                        Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-                        Name = "Charlie",
-                        Weight = 12.3,
-                        ArrivalDate = DateTime.UtcNow,
-                        SpeciesId = species.Id,
-                        ShelterId = shelter.Id
-                    });
-                    context.SaveChanges();
-                });
-            }).CreateClient();
+            _client = factory.CreateClient();
         }
 
         [Fact]
-        public async Task GetById_ReturnsMonkeyDto_WhenMonkeyExists()
+        public async Task RemoveMonkey_ShouldReturnNoContent_WhenMonkeyExists()
         {
-            // Act
-            var response = await _client.GetAsync("/api/monkeys/11111111-1111-1111-1111-111111111111");
+            var monkeyId = "4347caa1-302a-4d91-b1f6-29a82ba3e956";
 
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var response = await _client.DeleteAsync($"/api/monkeys/{monkeyId}");
 
-            var monkey = await response.Content.ReadFromJsonAsync<MonkeyDto>();
-            Assert.NotNull(monkey);
-            Assert.Equal("Charlie", monkey?.Name);
+            response.EnsureSuccessStatusCode();  // Checks the status= 204 (NoContent)
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
     }
 }

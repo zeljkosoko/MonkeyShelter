@@ -21,7 +21,7 @@ namespace MonkeyShelter.Test
         public MonkeyRepositoryTests()
         {
             var options = new DbContextOptionsBuilder<MonkeyShelterDbContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) // уникатна база за сваки тест
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) //unique db for each test
                 .Options;
 
             _context = new MonkeyShelterDbContext(options);
@@ -35,7 +35,7 @@ namespace MonkeyShelter.Test
             var species = new Species { Name = "Capuchin" };
             var shelter = new Shelter { Name = "Jungle Shelter" };
 
-            // Прво додајемо потребне ентитете у базу
+            //First add then save independed entities in db
             await _context.Species.AddAsync(species);
             await _context.Shelters.AddAsync(shelter);
             await _context.SaveChangesAsync();
@@ -46,8 +46,8 @@ namespace MonkeyShelter.Test
                 Name = "Charlie",
                 Weight = 10.2,
                 ArrivalDate = DateTime.UtcNow,
-                SpeciesId = species.Id,   // int вредност из базе
-                ShelterId = shelter.Id    // int вредност из базе
+                SpeciesId = species.Id,  
+                ShelterId = shelter.Id  
             };
 
             // Act

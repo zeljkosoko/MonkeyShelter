@@ -27,6 +27,7 @@ namespace MonkeyShelter.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        //list of monkeys which are not (vet) checked last 60 days
         public async Task<IEnumerable<Monkey>> GetMonkeysMissingCheckAsync()
         {
             var today = DateTime.UtcNow;
