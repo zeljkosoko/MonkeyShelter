@@ -10,9 +10,15 @@ using Microsoft.EntityFrameworkCore;
 using MonkeyShelter.Core.DTOs.Reports;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
+using MonkeyShelter.Core.Entities;
 
 namespace MonkeyShelter.Services.Reports
 {
+    /// <summary>
+    /// Cached data - usefull for:
+    /// 1. Fast Answer- Frequent (similar) query to DB (list of entities) so query result is stored in-memory db-Redis
+    /// 2. Scalability - They are shared between many application instances
+    /// </summary>
     public class ReportService: IReportService
     {
         private readonly MonkeyShelterDbContext _context;
@@ -25,7 +31,6 @@ namespace MonkeyShelter.Services.Reports
             _context = context;
             _cache = cache;
         }
-
         public async Task<IEnumerable<SpeciesCountDto>> GetMonkeyCountBySpeciesAsync()
         {
             var cachedData = await _cache.GetStringAsync(SpeciesCountCacheKey);
@@ -40,7 +45,7 @@ namespace MonkeyShelter.Services.Reports
                 .GroupBy(m => m.Species!.Name)
                 .Select(g => new SpeciesCountDto
                 {
-                    Species = g.Key, //key => GroupBy column(Name)
+                    SpeciesName = g.Key, //key => GroupBy column(Name)
                     Count = g.Count()
                 })
                 .ToListAsync();
@@ -58,6 +63,7 @@ namespace MonkeyShelter.Services.Reports
             _cache.Remove(SpeciesCountCacheKey);
         }
 
+        //Count of monkeys per species that arrived between two dates.
         public async Task<IEnumerable<SpeciesCountDto>> GetArrivalsBySpeciesBetweenAsync(DateTime from, DateTime to)
         {
             return await _context.Monkeys
@@ -66,15 +72,11 @@ namespace MonkeyShelter.Services.Reports
                 .GroupBy(m => m.Species!.Name)
                 .Select(g => new SpeciesCountDto
                 {
-                    Species = g.Key,
+                    SpeciesName = g.Key,
                     Count = g.Count()
                 })
                 .ToListAsync();
         }
 
-        //Information:
-        //SetStringAsync =set data in cache
-        //GetStringAsync-get data from cache
-        //Remove-delete cache
     }
 }

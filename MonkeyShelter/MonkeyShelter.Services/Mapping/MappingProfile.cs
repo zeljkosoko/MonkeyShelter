@@ -15,8 +15,8 @@ namespace MonkeyShelter.Services.Mapping
         {
             //Mapping for Monkey
             CreateMap<Monkey, MonkeyDto>()
-                .ForMember(dest => dest.Species, opt => opt.MapFrom(src => src.Species!.Name))
-                .ForMember(dest => dest.Shelter, opt => opt.MapFrom(src => src.Shelter!.Name));
+                .ForMember(dest => dest.SpeciesName, opt => opt.MapFrom(src => src.Species!.Name))
+                .ForMember(dest => dest.ShelterName, opt => opt.MapFrom(src => src.Shelter!.Name));
 
             CreateMap<CreateMonkeyDto, Monkey>()
                 .ForMember(dest => dest.ArrivalDate, opt => opt.MapFrom(_ => DateTime.UtcNow));

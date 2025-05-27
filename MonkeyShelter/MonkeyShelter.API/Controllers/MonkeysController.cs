@@ -5,111 +5,75 @@ using Microsoft.AspNetCore.Mvc;
 using MonkeyShelter.Core.DTOs;
 using MonkeyShelter.Core.Entities;
 using MonkeyShelter.Core.Interfaces;
+using MonkeyShelter.Services.BusinessLogic.Abstractions;
 using MonkeyShelter.Services.Reports;
 
 namespace MonkeyShelter.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Manager")] //Manager is authorized to use the all endpoints
+    [Authorize(Roles = "Manager")] 
     public class MonkeysController : ControllerBase
     {
-        private readonly IMonkeyRepository _monkeyRepository;
-        private readonly IMapper _mapper;
+        private readonly IMonkeyService _monkeyService;
         private readonly IReportService _reportService;
 
-        public MonkeysController(
-            IMonkeyRepository monkeyRepository, 
-            IMapper mapper, 
-            IReportService reportService)
+        public MonkeysController(IMonkeyService monkeyService, IReportService reportService)
         {
-            _monkeyRepository = monkeyRepository;
-            _mapper = mapper;
+            _monkeyService = monkeyService;
             _reportService = reportService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MonkeyDto>>> GetMonkeys()
+        [ProducesResponseType(typeof(IList<MonkeyDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IList<MonkeyDto>>> GetAllMonkeys()
         {
-            var monkeys = await _monkeyRepository.GetAllAsync();
-
-            return Ok(_mapper.Map<IEnumerable<MonkeyDto>>(monkeys));
+            var monkeys = await _monkeyService.GetAllAsync();
+            return Ok(monkeys);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<MonkeyDto>> GetMonkey(Guid id)
+        [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof(MonkeyDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<MonkeyDto>> GetMonkeyAsync(Guid id)
         {
-            var monkey = await _monkeyRepository.GetByIdAsync(id);
-            if (monkey == null)
-                return NotFound();
+            var monkey = await _monkeyService.GetMonkeyAsync(id);
 
-            return Ok(_mapper.Map<MonkeyDto>(monkey));
+            return monkey == null ? NotFound() : Ok(monkey);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<MonkeyDto>> PostMonkey(CreateMonkeyDto dto)
+        [HttpPut("{id:guid}/weight")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> UpdateWeightAsync(Guid id, [FromBody] double newWeight)
         {
-            var monkey = _mapper.Map<Monkey>(dto);
-            await _monkeyRepository.AddAsync(monkey);
-            return CreatedAtAction(nameof(GetMonkey), new { id = monkey.Id }, _mapper.Map<MonkeyDto>(monkey));
-        }
-
-        [HttpPut("{id}/weight")]
-        public async Task<IActionResult> UpdateWeight(Guid id, [FromBody] double newWeight)
-        {
-            await _monkeyRepository.UpdateWeightAsync(id, newWeight);
+            await _monkeyService.UpdateWeightAsync(id, newWeight);
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMonkey(Guid id)
+        [HttpDelete("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> DeleteMonkeyAsync(Guid id)
         {
-            await _monkeyRepository.RemoveAsync(id);
+            await _monkeyService.DeleteMonkeyAsync(id);
             return NoContent();
         }
 
-        [HttpPost("arrive")]
-        public async Task<ActionResult<MonkeyDto>> AddMonkey([FromBody] CreateMonkeyDto dto)
+        [HttpPost("register")]
+        [ProducesResponseType(typeof(MonkeyDto), StatusCodes.Status201Created)]
+        public async Task<ActionResult<MonkeyDto>> RegisterArrival([FromBody] CreateMonkeyDto createMonkeyDto)
         {
-            var canArrive = await _monkeyRepository.CanMonkeyArriveAsync(DateTime.UtcNow);
+            var createdMonkey = await _monkeyService.RegisterMonkeyArrivalAsync(createMonkeyDto);
 
-            if (!canArrive)
-            {
-                return BadRequest("The maximum number of arrivals for today has been reached.");
-            }
-
-            var monkey = _mapper.Map<Monkey>(dto);
-            monkey.ArrivalDate = DateTime.UtcNow;
-
-            await _monkeyRepository.AddAsync(monkey);
-            _reportService.InvalidateSpeciesCountCache();
-
-            return Ok(_mapper.Map<MonkeyDto>(monkey));
+            return CreatedAtAction(nameof(GetMonkeyAsync), new { id = createdMonkey.Id }, createdMonkey);
         }
 
-        [HttpDelete("{id}/leave")] //leaving monkey
-        public async Task<IActionResult> RemoveMonkey(Guid id)
+        [HttpPut("{id:guid}/departure")]
+        [ProducesResponseType(typeof(MonkeyDto[]), StatusCodes.Status200OK)]
+        public async Task<ActionResult<MonkeyDto>> RegisterDeparture(Guid id)
         {
-            var monkey = await _monkeyRepository.GetByIdAsync(id);
+            var departedMonkey = await _monkeyService.RegisterMonkeyDepartureAsync(id);
 
-            if (monkey == null)
-            {
-                return NotFound();
-            }
-
-            var canLeave = await _monkeyRepository.CanMonkeyLeaveAsync(DateTime.UtcNow, monkey.SpeciesId);
-
-            if (!canLeave)
-            {
-                return BadRequest("You cannot remove the monkey due to departure restrictions.");
-            }
-
-            monkey.DepartureDate = DateTime.UtcNow;
-
-            await _monkeyRepository.UpdateAsync(monkey);
-            _reportService.InvalidateSpeciesCountCache();
-
-            return NoContent();
+            return Ok(departedMonkey);
         }
     }
 }

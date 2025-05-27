@@ -8,7 +8,7 @@ namespace MonkeyShelter.Core.DTOs.Reports
 {
     public class SpeciesCountDto
     {
-        public string Species { get; set; } = string.Empty;
+        public string SpeciesName { get; set; } = string.Empty;
         public int Count { get; set; }
     }
 }

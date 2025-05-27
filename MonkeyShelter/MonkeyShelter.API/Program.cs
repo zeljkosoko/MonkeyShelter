@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System;
 using MonkeyShelter.Services.Reports;
+using MonkeyShelter.Services;
 
 namespace MonkeyShelter.API
 {
@@ -122,7 +123,9 @@ namespace MonkeyShelter.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MonkeyShelter API v1"));
             }
 
-          
+            //Global exception Middleware.
+            app.UseMiddleware<CustomExceptionMiddleware>();
+
             app.UseAuthentication(); //middleware
 
             //Roler manager creates role "Manager" in DB

@@ -1,4 +1,5 @@
-﻿using MonkeyShelter.Core.Entities;
+﻿using MonkeyShelter.Core.DTOs;
+using MonkeyShelter.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +10,17 @@ namespace MonkeyShelter.Core.Interfaces
 {
     public interface IMonkeyRepository
     {
-        Task<Monkey> GetByIdAsync(Guid id);
-        Task<IEnumerable<Monkey>> GetAllAsync();
-        Task<IEnumerable<Monkey>> GetBySpeciesAsync(int speciesId);
-        Task<IEnumerable<Monkey>> GetArrivalsBetweenDatesAsync(DateTime startDate, DateTime endDate);
+        Task<IList<Monkey>> GetAllAsync();
+        Task<Monkey?> GetByIdAsync(Guid id);
         Task AddAsync(Monkey monkey);
         Task RemoveAsync(Guid id);
+        Task UpdateAsync(Monkey monkey);
         Task UpdateWeightAsync(Guid id, double newWeight);
+
+        Task<IList<Monkey>> GetBySpeciesAsync(int speciesId);
+        Task<IList<Monkey>> GetArrivalsBetweenDatesAsync(DateTime startDate, DateTime endDate);
 
         Task<bool> CanMonkeyArriveAsync(DateTime date);
         Task<bool> CanMonkeyLeaveAsync(DateTime date, int speciesId);
-        Task UpdateAsync(Monkey monkey);
     }
 }

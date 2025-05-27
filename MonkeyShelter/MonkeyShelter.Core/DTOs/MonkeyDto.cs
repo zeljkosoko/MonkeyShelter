@@ -11,8 +11,9 @@ namespace MonkeyShelter.Core.DTOs
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public double Weight { get; set; }
-        public string Species { get; set; } = string.Empty;
-        public string Shelter { get; set; } = string.Empty;
+        public string SpeciesName { get; set; } = string.Empty;
+        public string ShelterName { get; set; } = string.Empty;
         public DateTime ArrivalDate { get; set; }
+        public DateTime? DepartureDate { get; set; }
     }
 }
