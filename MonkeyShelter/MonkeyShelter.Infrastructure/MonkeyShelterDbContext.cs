@@ -25,32 +25,29 @@ namespace MonkeyShelter.Infrastructure
         {
             base.OnModelCreating(modelBuilder);
 
-            // Seed example species (can be modified later)
             modelBuilder.Entity<Species>().HasData(
-                new Species { Name = "Kapucin" },
-                new Species { Name = "Zlatni lavlji tamari" },
-                new Species { Name = "Mandril" },
-                new Species { Name = "Babun" },
-                new Species { Name = "Langur" },
-                new Species { Name = "Pauk majmun" },
-                new Species { Name = "Veveričasti majmun" },
-                new Species { Name = "Rezus makaki" },
-                new Species { Name = "Gibon" },
-                new Species { Name = "Uakari" },
-                new Species { Name = "Nosati majmun" },
-                new Species { Name = "Džepni marmoset" },
-                new Species { Name = "Howler majmun" },
-                new Species { Name = "Gvenon" },
-                new Species { Name = "Dril" }
+                new Species { Id = 1, Name = "Kapucin" },
+                new Species { Id = 2, Name = "Zlatni lavlji tamari" },
+                new Species { Id = 3, Name = "Mandril" },
+                new Species { Id = 4, Name = "Babun" },
+                new Species { Id = 5, Name = "Langur" },
+                new Species { Id = 6, Name = "Pauk majmun" },
+                new Species { Id = 7, Name = "Veveričasti majmun" },
+                new Species { Id = 8, Name = "Rezus makaki" },
+                new Species { Id = 9, Name = "Gibon" },
+                new Species { Id = 10, Name = "Uakari" },
+                new Species { Id = 11, Name = "Nosati majmun" },
+                new Species { Id = 12, Name = "Džepni marmoset" },
+                new Species { Id = 13, Name = "Howler majmun" },
+                new Species { Id = 14, Name = "Gvenon" },
+                new Species { Id = 15, Name = "Dril" }
             );
 
-            //Seed examples shelters
             modelBuilder.Entity<Shelter>().HasData(
-                new Shelter { Name = "Krnjaca" },
-                new Shelter { Name = "Batajnica" }
+                new Shelter { Id = 1, Name = "Krnjaca" },
+                new Shelter { Id = 2, Name = "Batajnica" }
                 );
 
-            //Seed monkeys
             modelBuilder.Entity<Monkey>().HasData(
                 new Monkey { Name = "Pera1", Weight = 22, ArrivalDate = new DateTime(2025, 5, 1), SpeciesId = 1, ShelterId = 1 },
                 new Monkey { Name = "Mika1", Weight = 33, ArrivalDate = new DateTime(2025, 5, 1), SpeciesId = 1, ShelterId = 1 },
