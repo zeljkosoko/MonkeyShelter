@@ -3,17 +3,22 @@
       Every day, monkeys may arrive or leave the shelter. Each monkey has an ID, species, name, and weight.
       
 # **Functionalities**
+
       ## Monkey Arrival
            Up to 7 monkeys may arrive per day.
            Required fields: ID, species, name, weight.
            Each monkey must be assigned to one of the predefined species
+           
       ## Monkey Departure
             - Up to 5 monkeys may leave per day.
             - A monkey may only leave if:
               - Departures - arrivals for the current day is not more than 2.
             - At least one monkey of the species remains in the shelter.
+            
       ## Weight Update
+      
             - Monkey weight can change while in the shelter.
+            
       ## Veterinarian Check-up
             - A monkey must be scheduled for a vet check every 60 days of stay. 
       ## **Reports**
