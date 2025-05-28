@@ -1,4 +1,4 @@
-# ** Project info:
+# **Project info:**
       The shelter currently houses 90 monkeys of about 15 different species. 
       Every day, monkeys may arrive or leave the shelter. Each monkey has an ID, species, name, and weight.
       
