@@ -31,7 +31,7 @@
       
       **Shelter managers may only manage monkeys in their own shelter.**
       
-      ## **Every arrival, departure, and weight change must be recorded with a timestamp.**
+      **Every arrival, departure, and weight change must be recorded with a timestamp.**
       
 
       ┌────────────────────┐
