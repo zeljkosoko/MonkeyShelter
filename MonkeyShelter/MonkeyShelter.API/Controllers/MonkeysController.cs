@@ -10,20 +10,25 @@ using MonkeyShelter.Services.Reports;
 
 namespace MonkeyShelter.API.Controllers
 {
+    /// <summary>
+    /// Controller doesn't catch the exception given from service, it just forwards it to the custom exception middleware
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = "Manager")] 
     public class MonkeysController : ControllerBase
     {
         private readonly IMonkeyService _monkeyService;
-        private readonly IReportService _reportService;
 
-        public MonkeysController(IMonkeyService monkeyService, IReportService reportService)
+        public MonkeysController(IMonkeyService monkeyService)
         {
             _monkeyService = monkeyService;
-            _reportService = reportService;
         }
 
+        /// <summary>
+        /// Get all monkeys
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [ProducesResponseType(typeof(IList<MonkeyDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IList<MonkeyDto>>> GetAllMonkeys()
@@ -32,6 +37,11 @@ namespace MonkeyShelter.API.Controllers
             return Ok(monkeys);
         }
 
+        /// <summary>
+        /// Get monkey by Id or NotFound
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id:guid}")]
         [ProducesResponseType(typeof(MonkeyDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -42,6 +52,12 @@ namespace MonkeyShelter.API.Controllers
             return monkey == null ? NotFound() : Ok(monkey);
         }
 
+        /// <summary>
+        /// Update monkey by id, with new weight, then return 204-NoContent or forward exception to middleware
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="newWeight"></param>
+        /// <returns></returns>
         [HttpPut("{id:guid}/weight")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> UpdateWeightAsync(Guid id, [FromBody] double newWeight)
@@ -50,6 +66,11 @@ namespace MonkeyShelter.API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Delete monkey then return 204-NoContent/ forward exception to middleware
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteMonkeyAsync(Guid id)

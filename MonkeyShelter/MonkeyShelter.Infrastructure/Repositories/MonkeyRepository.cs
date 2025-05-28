@@ -21,20 +21,20 @@ namespace MonkeyShelter.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<Monkey?> GetByIdAsync(Guid id)
-        {
-            return await _context.Monkeys
-                .Include(m => m.Species)
-                .Include(m => m.Shelter)
-                .FirstOrDefaultAsync(m => m.Id == id);
-        }
-
         public async Task<IList<Monkey>> GetAllAsync()
         {
             return await _context.Monkeys
                 .Include(m => m.Species)
                 .Include(m => m.Shelter)
                 .ToListAsync();
+        }
+
+        public async Task<Monkey?> GetByIdAsync(Guid id)
+        {
+            return await _context.Monkeys
+                .Include(m => m.Species)
+                .Include(m => m.Shelter)
+                .FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public async Task<IList<Monkey>> GetBySpeciesAsync(int speciesId)

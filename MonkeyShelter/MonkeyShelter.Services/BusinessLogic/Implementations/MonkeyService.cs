@@ -18,11 +18,11 @@ namespace MonkeyShelter.Services.BusinessLogic.Implementations
     {
         private readonly IMonkeyRepository _monkeyRepository;
         private readonly IMapper _mapper;
-        private readonly ILogger _logger;
+        private readonly ILogger<MonkeyService> _logger;
         public MonkeyService(
             IMonkeyRepository monkeyRepository,
             IMapper mapper,
-            ILogger logger)
+            ILogger<MonkeyService> logger)
         {
             _monkeyRepository = monkeyRepository;
             _mapper = mapper;
@@ -39,19 +39,10 @@ namespace MonkeyShelter.Services.BusinessLogic.Implementations
 
         public async Task<MonkeyDto?> GetMonkeyAsync(Guid id)
         {
-            //There is no exceptions.-> Monkey exists or it is null
+            //There's no exceptions.-> Monkey exists or it is null
             var monkey = await _monkeyRepository.GetByIdAsync(id);
 
-            return monkey == null? null : _mapper.Map<MonkeyDto>(monkey);
-        }
-
-        public async Task DeleteMonkeyAsync(Guid id)
-        {
-            var monkey = await GetExistingMonkeyOrThrow(id);
-
-            await _monkeyRepository.RemoveAsync(id);
-
-            _logger.LogInformation("Monkey is successfully deleted for ID: {MonkeyId}", id);
+            return monkey == null ? null : _mapper.Map<MonkeyDto>(monkey);
         }
 
         public async Task UpdateWeightAsync(Guid id, double neWeight)
@@ -63,6 +54,16 @@ namespace MonkeyShelter.Services.BusinessLogic.Implementations
 
             _logger.LogInformation($"Monkey {id} updated successfully.");
         }
+
+        public async Task DeleteMonkeyAsync(Guid id)
+        {
+            var monkey = await GetExistingMonkeyOrThrow(id);
+
+            await _monkeyRepository.RemoveAsync(id);
+
+            _logger.LogInformation("Monkey is successfully deleted for ID: {MonkeyId}", id);
+        }
+
 
         public async Task<MonkeyDto> RegisterMonkeyArrivalAsync(CreateMonkeyDto createMonkeyDto)
         {
@@ -115,7 +116,8 @@ namespace MonkeyShelter.Services.BusinessLogic.Implementations
             if(monkey == null)
             {
                 _logger.LogWarning("Monkey {MonkeyId} is not found", id);
-                //Custom specific exception for domain error:
+                
+                    //Custom specific exception for domain error:
                 throw new CustomNotFoundException($"Monkey {id} not found.");
             }
 

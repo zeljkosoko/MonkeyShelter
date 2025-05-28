@@ -15,6 +15,8 @@ using System.Text;
 using System;
 using MonkeyShelter.Services.Reports;
 using MonkeyShelter.Services;
+using MonkeyShelter.Services.BusinessLogic.Implementations;
+using MonkeyShelter.Services.BusinessLogic.Abstractions;
 
 namespace MonkeyShelter.API
 {
@@ -64,8 +66,10 @@ namespace MonkeyShelter.API
             builder.Services.AddDbContext<MonkeyShelterDbContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Register IRepositories and their implementations
+            // Register IServices and their implementations
+            builder.Services.AddScoped<IMonkeyService, MonkeyService>();
             builder.Services.AddScoped<IMonkeyRepository, MonkeyRepository>();
+
             builder.Services.AddScoped<ISpeciesRepository, SpeciesRepository>();
             builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
             builder.Services.AddScoped<IVetCheckRepository, VetCheckRepository>();

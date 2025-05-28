@@ -40,8 +40,10 @@ namespace MonkeyShelter.Services
             }
         }
 
+        //Returns HttpResponse [ header, status code, json body {"error":   , "statusCode": } ]
         private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
+            //header
             context.Response.ContentType = "application/json";
 
             //Add custom exceptions with status codes

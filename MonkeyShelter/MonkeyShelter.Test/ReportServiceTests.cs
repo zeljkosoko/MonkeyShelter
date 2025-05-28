@@ -66,7 +66,7 @@ namespace MonkeyShelter.Test
 
             Assert.NotNull(result);
             Assert.Single(result);
-            Assert.Equal("Chimpanzee", result.First().Species);
+            Assert.Equal("Chimpanzee", result.First().SpeciesName);
             Assert.Equal(2, result.First().Count);
         }
     }
