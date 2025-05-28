@@ -4,32 +4,32 @@
       
 # **Functionalities**
 
-      ### Monkey Arrival
+      *Monkey Arrival*
            Up to 7 monkeys may arrive per day.
            Required fields: ID, species, name, weight.
            Each monkey must be assigned to one of the predefined species
            
-      ### Monkey Departure
+      *Monkey Departure*
             Up to 5 monkeys may leave per day.
             A monkey may only leave if:
             Departures - arrivals for the current day is not more than 2.
             At least one monkey of the species remains in the shelter.
             
-      ## Weight Update
+      *Weight Update*
             Monkey weight can change while in the shelter.
             
-      ## Veterinarian Check-up
+      *Veterinarian Check-up*
             A monkey must be scheduled for a vet check every 60 days of stay. 
             
-      ## **Reports**
+      **Reports**
             Count of monkeys per species.
             Count of monkeys per species that arrived between two dates.
             
-      ## **Logging middleware.**
+      **Logging middleware.**
       
-      ## **The monkey species count report must be cached with smart invalidation.**
+      **The monkey species count report must be cached with smart invalidation.**
       
-      ## **Shelter managers may only manage monkeys in their own shelter.**
+      **Shelter managers may only manage monkeys in their own shelter.**
       
       ## **Every arrival, departure, and weight change must be recorded with a timestamp.**
       
