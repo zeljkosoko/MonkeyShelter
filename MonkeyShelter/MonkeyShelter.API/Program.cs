@@ -17,6 +17,9 @@ using MonkeyShelter.Services.Reports;
 using MonkeyShelter.Services;
 using MonkeyShelter.Services.BusinessLogic.Implementations;
 using MonkeyShelter.Services.BusinessLogic.Abstractions;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using MonkeyShelter.API.FluentValidator;
 
 namespace MonkeyShelter.API
 {
@@ -31,6 +34,11 @@ namespace MonkeyShelter.API
             
 
             builder.Services.AddControllers();
+
+            //Fluent validation registration with generate types..
+            builder.Services.AddFluentValidationAutoValidation();
+            builder.Services.AddValidatorsFromAssemblyContaining<CreateSpeciesDtoValidator>();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
 
@@ -68,8 +76,9 @@ namespace MonkeyShelter.API
 
             // Register IServices and their implementations
             builder.Services.AddScoped<IMonkeyService, MonkeyService>();
-            builder.Services.AddScoped<IMonkeyRepository, MonkeyRepository>();
+            builder.Services.AddScoped<ISpeciesService, SpeciesService>();
 
+            builder.Services.AddScoped<IMonkeyRepository, MonkeyRepository>();
             builder.Services.AddScoped<ISpeciesRepository, SpeciesRepository>();
             builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
             builder.Services.AddScoped<IVetCheckRepository, VetCheckRepository>();
@@ -115,7 +124,6 @@ namespace MonkeyShelter.API
                 };
             });
 
-            
 
             var app = builder.Build();
 

@@ -52,6 +52,7 @@ namespace MonkeyShelter.Services
                 CustomNotFoundException => (int)HttpStatusCode.NotFound,
                 DepartureNotAllowedException => (int)HttpStatusCode.Forbidden,
                 MaxArrivalCountReachedExc => (int)HttpStatusCode.Conflict,
+                SpeciesAlreadyExistsException => (int)HttpStatusCode.Conflict,//409
                 _ => (int)HttpStatusCode.InternalServerError
             };
 

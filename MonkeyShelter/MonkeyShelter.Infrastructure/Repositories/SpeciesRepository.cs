@@ -29,5 +29,10 @@ namespace MonkeyShelter.Infrastructure.Repositories
             await _context.Species.AddAsync(species);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> ExistsSpecies(string name)
+        {
+            return await _context.Species.AnyAsync(s => s.Name == name);
+        }
     }
 }

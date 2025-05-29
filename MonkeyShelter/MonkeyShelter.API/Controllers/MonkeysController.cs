@@ -30,8 +30,8 @@ namespace MonkeyShelter.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [ProducesResponseType(typeof(IList<MonkeyDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IList<MonkeyDto>>> GetAllMonkeys()
+        [ProducesResponseType(typeof(IEnumerable<MonkeyDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<MonkeyDto>>> GetAllMonkeys()
         {
             var monkeys = await _monkeyService.GetAllAsync();
             return Ok(monkeys);

@@ -29,10 +29,10 @@ namespace MonkeyShelter.Services.BusinessLogic.Implementations
             _logger = logger;
         }
 
-        public async Task<IList<MonkeyDto>> GetAllAsync()
+        public async Task<IEnumerable<MonkeyDto>> GetAllAsync()
         {
             var monkeys = await _monkeyRepository.GetAllAsync();
-            var monkeyDtos = _mapper.Map<IList<MonkeyDto>>(monkeys);
+            var monkeyDtos = _mapper.Map<IEnumerable<MonkeyDto>>(monkeys);
 
             return monkeyDtos;
         }

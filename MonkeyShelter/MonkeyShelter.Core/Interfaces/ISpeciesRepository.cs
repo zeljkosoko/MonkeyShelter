@@ -12,5 +12,6 @@ namespace MonkeyShelter.Core.Interfaces
         Task<IEnumerable<Species>> GetAllAsync();
         Task<Species?> GetByIdAsync(int id);
         Task AddAsync(Species species);
+        Task<bool> ExistsSpecies(string name);
     }
 }
